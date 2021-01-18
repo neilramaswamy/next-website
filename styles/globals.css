@@ -63,10 +63,6 @@ body {
     font-weight: 400;
 }
 
-body {
-    padding: 0 60px;
-}
-
 /* Default overrides should go here */
 
 a {
@@ -87,6 +83,11 @@ p {
     font-feature-settings: 'kern';
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: subpixel-antialiased;
+}
+
+button {
+    font-family: var(--ff-main);
+    border: none;
 }
 
 h1,

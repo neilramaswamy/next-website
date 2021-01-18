@@ -7,10 +7,5 @@ interface Props {
 
 export const FlairText = (props: React.PropsWithChildren<Props>): JSX.Element => {
     const { children, flair } = props
-    return (
-        <p className={`${styles.text} ${styles[flair]}`}>
-            {children}
-            {` `}
-        </p>
-    )
+    return <span className={`${styles.text} ${styles[flair]}`}>{children}</span>
 }

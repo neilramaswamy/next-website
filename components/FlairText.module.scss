@@ -1,19 +1,54 @@
+// Adapated from https://codepen.io/mxttsco/pen/KgodYm
+$transition: all 0.2s ease-in-out;
+@mixin text-with-animated-underscore($cssVar) {
+    $color: var(#{$cssVar});
+    color: $color;
+
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        width: 0px;
+        height: 2px;
+        transition: $transition;
+        transition-duration: 0.4s;
+        opacity: 0;
+        left: 0;
+        background-color: $color;
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        &:before,
+        &:after {
+            width: 100%;
+            opacity: 1;
+        }
+    }
+}
+
 .text {
-    display: inline;
+    display: inline-block;
+    position: relative;
+
+    transition: $transition;
+    position: relative;
 }
 
 .brownU {
-    color: var(--c-red);
+    @include text-with-animated-underscore(--c-red);
 }
 
 .orbyt {
-    color: var(--c-purple);
+    @include text-with-animated-underscore(--c-purple);
 }
 
 .projects {
-    color: var(--c-green);
+    @include text-with-animated-underscore(--c-green);
 }
 
 .blog {
-    color: var(--c-blue);
+    @include text-with-animated-underscore(--c-blue);
 }

@@ -1,0 +1,13 @@
+@import '../styles/main.module.scss';
+
+.container {
+    padding: 0 15px;
+
+    @include breakpoint('xsm') {
+        padding: 0 25px;
+    }
+
+    @include breakpoint('lg') {
+        padding: 0 60px;
+    }
+}

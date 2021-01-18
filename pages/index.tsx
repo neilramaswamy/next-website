@@ -2,6 +2,9 @@ import styles from 'styles/Home.module.scss'
 import { Header } from 'components/Header'
 import { FlairText } from 'components/FlairText'
 import { Flair } from 'config/config'
+import SiteWrapper from 'components/SiteWrapper'
+import { Button } from 'components/Button'
+import { GitHub } from 'react-feather'
 
 const Home = (): JSX.Element => {
     const leftColumn = (
@@ -11,17 +14,21 @@ const Home = (): JSX.Element => {
             </h1>
 
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent id{' '}
-                <FlairText flair={Flair.BrownU}>Brown University</FlairText>
-                est, nec facilisis dui. Sed commodo urna, sit amet{' '}
-                <FlairText flair={Flair.Orbyt}>Orbyt</FlairText> sem gravida eu.{' '}
+                I'm currently studying CS at{' '}
+                <FlairText flair={Flair.BrownU}>Brown University</FlairText>, but I've taken many
+                music and english classes. I'm also working on{' '}
+                <FlairText flair={Flair.Orbyt}>Orbyt</FlairText>, the best way to manage your
+                network.{' '}
             </p>
 
             <p>
-                Curabitur sit amet <FlairText flair={Flair.Blog}>my blog</FlairText> augue, a
-                rhoncus massa. Vestibulum risus nunc, scelerisque id dolor at, varius{' '}
-                <FlairText flair={Flair.Projects}>projects</FlairText> enim. Duis ac consequat elit.
+                If you're into writing as much as I am, then you should check out{' '}
+                <FlairText flair={Flair.Blog}>my blog</FlairText>. I'd also recommend my list of{' '}
+                <FlairText flair={Flair.Projects}>projects</FlairText>, if you've liked to read
+                about what I've worked on over the years.
             </p>
+
+            <Button text={'GitHub'} />
         </div>
     )
 
@@ -32,14 +39,16 @@ const Home = (): JSX.Element => {
     )
 
     return (
-        <div className={styles.container}>
-            <Header />
+        <SiteWrapper>
+            <div className={styles.container}>
+                <Header />
 
-            <div className={styles.content}>
-                {leftColumn}
-                {rightColumn}
+                <div className={styles.content}>
+                    {leftColumn}
+                    {rightColumn}
+                </div>
             </div>
-        </div>
+        </SiteWrapper>
     )
 }
 
