@@ -1,7 +1,7 @@
 import styles from 'styles/Home.module.scss'
 import { Header } from 'components/Header'
 import { FlairText } from 'components/FlairText'
-import { Flair } from 'config/config'
+import { Flair, InternalLinks } from 'config/config'
 import SiteWrapper from 'components/SiteWrapper'
 import { Button } from 'components/Button'
 import { GitHub } from 'react-feather'
@@ -28,7 +28,7 @@ const Home = (): JSX.Element => {
                 about what I've worked on over the years.
             </p>
 
-            <Button text={'GitHub'} />
+            <Button text={'GitHub'} link={'https://github.com'} />
         </div>
     )
 

@@ -1,5 +1,8 @@
+import { Flair, FlairToLink } from 'config/config'
+import Link from 'next/link'
+import { isLinkQualified } from 'util/isLinkQualified'
 import styles from './FlairText.module.scss'
-import { Flair } from 'config/config'
+import { GenericLink } from './GenericLink'
 
 interface Props {
     flair: Flair
@@ -7,5 +10,12 @@ interface Props {
 
 export const FlairText = (props: React.PropsWithChildren<Props>): JSX.Element => {
     const { children, flair } = props
-    return <span className={`${styles.text} ${styles[flair]}`}>{children}</span>
+
+    const link = FlairToLink[flair]
+
+    return (
+        <GenericLink link={link}>
+            <span className={`${styles.text} ${styles[flair]}`}>{children}</span>
+        </GenericLink>
+    )
 }

@@ -1,6 +1,6 @@
 import styles from './Header.module.scss'
 import Link from 'next/link'
-import { Routes } from 'config/config'
+import { InternalLinks } from 'config/config'
 
 export const Header = (): JSX.Element => {
     const headerLinkContent = (text: string): JSX.Element => (
@@ -12,11 +12,11 @@ export const Header = (): JSX.Element => {
         <header className={styles.container}>
             <div>{/* Logo goes here! */}</div>
             <section className={styles.linkContainer}>
-                <Link href={Routes.Home}>{headerLinkContent('About')}</Link>
+                <Link href={InternalLinks.Home}>{headerLinkContent('About')}</Link>
 
-                <Link href={Routes.Projects}>{headerLinkContent('Projects')}</Link>
+                <Link href={InternalLinks.Projects}>{headerLinkContent('Projects')}</Link>
 
-                <Link href={Routes.Blog}>{headerLinkContent('Blog')}</Link>
+                <Link href={InternalLinks.Blog}>{headerLinkContent('Blog')}</Link>
             </section>
         </header>
     )
