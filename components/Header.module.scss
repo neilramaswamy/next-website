@@ -1,0 +1,15 @@
+.container {
+    padding: 30px 0;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.linkContainer > a + a {
+    margin-left: 2rem;
+}
+
+.headerLinkText {
+    margin: 0;
+    display: inline;
+}

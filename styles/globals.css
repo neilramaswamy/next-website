@@ -9,6 +9,7 @@
     --c-heading-text: #fff;
     --c-body-text: #e9e9e9;
 
+    --c-dark-blue: #171e2e;
     --c-green: #16a085;
     --c-blue: #3498db;
     --c-purple: #9b59b6;
@@ -54,13 +55,24 @@ body {
     margin: 0;
 
     font-family: var(--ff-secondary);
+    color: var(--c-body-text);
+    background-color: var(--c-dark-blue);
     font-size: var(--fs-base);
 
     line-height: 1.75;
     font-weight: 400;
 }
 
+body {
+    padding: 0 60px;
+}
+
 /* Default overrides should go here */
+
+a {
+    text-decoration: none;
+    color: unset;
+}
 
 /* Typography */
 

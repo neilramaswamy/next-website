@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    height: 100vh;
+    background-color: var(--c-dark-blue);
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+
+    & > .column + .column {
+        margin-left: 40px;
+    }
+}
+
+.textContainer {
+    max-width: 45ch;
+}
+
+.column {
+    width: calc(50% - 20px);
+    flex-shrink: 0;
+}
+
+.imageContainer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.meImage {
+    width: 65%;
+    border-radius: 20px;
+}

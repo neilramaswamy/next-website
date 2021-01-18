@@ -1,15 +1,23 @@
-enum Page {
-    About,
-    Projects,
-    Blog,
-}
+import styles from './Header.module.scss'
+import Link from 'next/link'
+import { Routes } from 'config/config'
 
-interface Props {
-    activePage: Page
-}
+export const Header = (): JSX.Element => {
+    const headerLinkContent = (text: string): JSX.Element => (
+        <a>
+            <h5 className={styles.headerLinkText}>{text}</h5>
+        </a>
+    )
+    return (
+        <header className={styles.container}>
+            <div>{/* Logo goes here! */}</div>
+            <section className={styles.linkContainer}>
+                <Link href={Routes.Home}>{headerLinkContent('About')}</Link>
 
-export const Header = (props: Props): JSX.Element => {
-    const { activePage } = props
+                <Link href={Routes.Projects}>{headerLinkContent('Projects')}</Link>
 
-    return <div>{`active page is ${activePage}`}</div>
+                <Link href={Routes.Blog}>{headerLinkContent('Blog')}</Link>
+            </section>
+        </header>
+    )
 }
