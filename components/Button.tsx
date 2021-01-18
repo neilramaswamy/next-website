@@ -25,11 +25,11 @@ export const Button = (props: Props): JSX.Element => {
     const [style, trigger] = useBoop({ x: 3 })
 
     return (
-        <button className={styles.button} onMouseEnter={trigger}>
+        <button className={styles.button} /*onMouseEnter={() => trigger()} */>
             {text}
-            <animated.div className={styles.iconContainer} style={style}>
+            {/* <animated.div className={styles.iconContainer} style={style}>
                 <ArrowRight />
-            </animated.div>
+            </animated.div> */}
         </button>
     )
 }
