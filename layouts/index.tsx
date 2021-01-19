@@ -1,12 +1,8 @@
 import { Header } from 'components/Header'
+import { PropsWithChildren } from 'react'
 
 interface Props {
-    // TODO: Refactor this out or get type definitions from the library?
-    frontMatter: {
-        title?: string
-        author?: string
-        description?: string
-    }
+    frontMatter: MdxEnhanced.FrontMatter
 }
 
 const PostLayout = (props: PropsWithChildren<Props>): JSX.Element => {

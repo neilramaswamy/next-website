@@ -1,5 +1,3 @@
-import { NavLink } from 'config/config'
-
-export const isLinkQualified = (link: NavLink): boolean => {
+export const isLinkQualified = (link: string): boolean => {
     return !!/https?:\/\/.*/.exec(link)
 }

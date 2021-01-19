@@ -12,7 +12,7 @@ export enum ExternalLinks {
     Orbyt = 'https://orbyt.cc',
 }
 
-export type NavLink = InternalLink | ExternalLink
+export type NavLink = InternalLinks | ExternalLinks
 
 export enum DynamicRoutes {
     ProjectPostRoute = 'project-post-name',
