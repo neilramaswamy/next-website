@@ -1,10 +1,8 @@
-import styles from 'styles/Home.module.scss'
-import { Header } from 'components/Header'
-import { FlairText } from 'components/FlairText'
-import { Flair, InternalLinks } from 'config/config'
-import SiteWrapper from 'components/SiteWrapper'
 import { Button } from 'components/Button'
-import { GitHub } from 'react-feather'
+import { FlairText } from 'components/FlairText'
+import { Header } from 'components/Header'
+import { Flair } from 'config/config'
+import styles from 'styles/Home.module.scss'
 
 const Home = (): JSX.Element => {
     const leftColumn = (
@@ -39,16 +37,14 @@ const Home = (): JSX.Element => {
     )
 
     return (
-        <SiteWrapper>
-            <div className={styles.container}>
-                <Header />
+        <div className={styles.container}>
+            <Header />
 
-                <div className={styles.content}>
-                    {leftColumn}
-                    {rightColumn}
-                </div>
+            <div className={styles.content}>
+                {leftColumn}
+                {rightColumn}
             </div>
-        </SiteWrapper>
+        </div>
     )
 }
 
