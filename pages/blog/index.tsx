@@ -1,23 +1,26 @@
 import SiteWrapper from 'components/SiteWrapper'
 import { Header } from 'components/Header'
-import { GetStaticProps, InferGetStaticPropsType } from 'next'
-// import * as foobarFrontMatter from './foobar.mdx'
+import { frontMatter as blogPosts } from './**.mdx'
+import { GenericLink } from 'components/GenericLink'
 
-const BlogLanding = (foobar: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element => {
-    console.log('hello there', foobar)
+const Blog = (): JSX.Element => {
     return (
         <SiteWrapper>
             <Header />
 
-            <div>this is the page for every single blog entry</div>
+            {blogPosts.map((post) => {
+                if (!post.__resourcePath) {
+                    return <></>
+                }
+
+                return (
+                    <GenericLink link={post.__resourcePath}>
+                        <h2>{post.title}</h2>
+                    </GenericLink>
+                )
+            })}
         </SiteWrapper>
     )
 }
 
-export const getStaticProps: GetStaticProps = async (context) => {
-    return {
-        props: { posts: ['abc', 'def'] },
-    }
-}
-
-export default BlogLanding
+export default Blog
