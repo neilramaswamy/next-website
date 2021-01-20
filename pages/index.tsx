@@ -1,10 +1,8 @@
-import styles from 'styles/Home.module.scss'
-import { Header } from 'components/Header'
-import { FlairText } from 'components/FlairText'
-import { Flair, InternalLinks } from 'config/config'
-import SiteWrapper from 'components/SiteWrapper'
 import { Button } from 'components/Button'
-import { GitHub } from 'react-feather'
+import { FlairText } from 'components/FlairText'
+import { Header } from 'components/Header'
+import { Flair } from 'config/config'
+import styles from 'styles/Home.module.scss'
 
 const Home = (): JSX.Element => {
     const leftColumn = (
@@ -22,13 +20,12 @@ const Home = (): JSX.Element => {
             </p>
 
             <p>
-                If you're into writing as much as I am, then you should check out{' '}
-                <FlairText flair={Flair.Blog}>my blog</FlairText>. I'd also recommend my list of{' '}
-                <FlairText flair={Flair.Projects}>projects</FlairText>, if you've liked to read
-                about what I've worked on over the years.
+                I'm still putting this site together, so you can check out my empty{' '}
+                <FlairText flair={Flair.Blog}>blog</FlairText> if you don't like reading. I'll
+                upload my writing there soon. I really recommend you don't check out the stuff over
+                on <FlairText flair={Flair.Projects}>my projects page</FlairText>, as the content
+                there is unstyled and intellectually vacuous (for now)!
             </p>
-
-            <Button text={'GitHub'} link={'https://github.com'} />
         </div>
     )
 
@@ -39,16 +36,14 @@ const Home = (): JSX.Element => {
     )
 
     return (
-        <SiteWrapper>
-            <div className={styles.container}>
-                <Header />
+        <div className={styles.container}>
+            <Header />
 
-                <div className={styles.content}>
-                    {leftColumn}
-                    {rightColumn}
-                </div>
+            <div className={styles.content}>
+                {leftColumn}
+                {rightColumn}
             </div>
-        </SiteWrapper>
+        </div>
     )
 }
 

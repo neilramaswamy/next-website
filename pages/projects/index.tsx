@@ -1,14 +1,16 @@
-import SiteWrapper from 'components/SiteWrapper'
 import { Header } from 'components/Header'
+import { PostPreview } from 'components/PostPreview'
+import { frontMatter as blogPosts } from './**.mdx'
+import { PreviewContainer } from 'components/PreviewContainer'
 
-const Projects = (): JSX.Element => {
+const Blog = (): JSX.Element => {
     return (
-        <SiteWrapper>
+        <div>
             <Header />
 
-            <div>these are my projects</div>
-        </SiteWrapper>
+            <PreviewContainer postFrontMatter={blogPosts} />
+        </div>
     )
 }
 
-export default Projects
+export default Blog

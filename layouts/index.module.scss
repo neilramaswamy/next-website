@@ -1,0 +1,21 @@
+.metaContainer {
+    text-align: center;
+}
+
+.metaContainer > * {
+    margin: 0;
+}
+
+.title {
+    margin: 0 0 0.5rem 0;
+}
+
+.author {
+    margin: 0 auto 0.3rem auto;
+    max-width: 50ch;
+}
+
+.description {
+    margin: 0 auto;
+    max-width: 50ch;
+}

@@ -1,14 +1,13 @@
-import SiteWrapper from 'components/SiteWrapper'
 import { Header } from 'components/Header'
 
-const BlogLanding = (): JSX.Element => {
+const Projects = (): JSX.Element => {
     return (
-        <SiteWrapper>
+        <div>
             <Header />
 
-            <div>this is the page for every single blog entry</div>
-        </SiteWrapper>
+            <div>these are my blog posts</div>
+        </div>
     )
 }
 
-export default BlogLanding
+export default Projects
