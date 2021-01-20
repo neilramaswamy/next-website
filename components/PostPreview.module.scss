@@ -1,0 +1,17 @@
+.container {
+    width: 250px;
+    height: 400px;
+    border-radius: 20px;
+    padding: 1rem;
+    background-color: var(--c-blue-gray);
+
+    transition: transform 150ms ease;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.imageWrapper {
+    height: 60%;
+}

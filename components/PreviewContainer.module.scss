@@ -1,0 +1,21 @@
+@import '../styles/main.module.scss';
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include breakpoint('sm') {
+        flex-wrap: wrap;
+        flex-direction: row;
+    }
+}
+
+.container > * + * {
+    margin-top: 2rem;
+
+    @include breakpoint('sm') {
+        margin-top: 0;
+        margin-left: 2rem;
+    }
+}

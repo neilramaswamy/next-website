@@ -8,11 +8,14 @@ interface Props {
 
     linkProps?: LinkProps
     anchorProps?: React.HTMLProps<HTMLAnchorElement>
+
+    // Courtesy prop (it is identical to linkProps.className)
+    className?: string
 }
 
 // Next Links don't support new tabs out of the box, so we'll bake that into our own component.
 export const GenericLink = (props: PropsWithChildren<Props>): JSX.Element => {
-    const { link: _link, linkProps, anchorProps, children } = props
+    const { link: _link, linkProps, anchorProps, className, children } = props
 
     const isQualified = isLinkQualified(_link)
     // Don't strip extensions on unqualified/outbound URLs... they're not yours to play with!
@@ -21,7 +24,7 @@ export const GenericLink = (props: PropsWithChildren<Props>): JSX.Element => {
 
     return (
         <Link {...linkProps} href={link}>
-            <a target={anchorTarget} {...anchorProps} href={link}>
+            <a target={anchorTarget} className={className} {...anchorProps} href={link}>
                 {children}
             </a>
         </Link>
