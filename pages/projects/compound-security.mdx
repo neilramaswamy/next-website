@@ -1,36 +1,49 @@
 ---
 title: 'Compound Security'
 author: 'Neil Ramaswamy & Ryan Adolf'
-description: 'A novel way to hack the gates around your house'
+description: 'Turning a plain-old "thing" into an internet of "thing"'
+gradient: '#d68b27,#da4526'
 ---
 
 import { FlairText } from '../../components/FlairText'
 import { Flair } from '../../config/config'
+import { PostImage } from '../../components/PostImage'
 
 <h3>Introduction</h3>
 
-Please note that this is all placeholder text. Most of what follows is a joke. I'll try to make it more formal when the entire site is done.
+Before I went to college (the summer of 2019), I worked with my good friend Ryan Adolf to create "Compound Security," a voice-powered assistant that would open unlock/open entry ways into one's house (like their garage door, for example). For me, I wanted to be able to open the gate to my driveway with my Google Assistant. Because we're not far enough in the future yet, garage doors and gates generally don't have APIs! So this project found us doing a lot of reverse engineering to be able to get big pieces of metal to open gracefully, all within 10 spoken words.
 
-Before I went to college (the summer of 2019), I worked with my good pal Ryan Adolf to create Compound Security. The goal for this project was to be able to open the gate to my driveway with my Google Assistant. Unfortunately, we're not as far in the future as I thought we were, so my gate didn't have any nice API. How rude of the gate maker! They did, though, have a voice assistant intgration for like $50, but I wasn't going to pay money to have my fun _taken away from me_.
+<h3>Finding the Hardware Solution</h3>
 
-<h3>The Technical Steps</h3>
+We first analyzed how the gate mechanism worked at the time: I could punch in 4 digits into my landline, and the gate would magically open! While we weren't sure how the data was flowing from the landline to the gate itself, we first tried to see if we could programatically generate dial tones and feed that through a landline interface somewhere around my house. While generating the dial tones with SoX from the command line was pretty easy, we never managed to successfully send it through any landline interfaces. Darn.
 
-So instead we set out on this fun project of securely getting my gate to open (or really, any other infrared-powered dumb device (not a smart device, because garages and gates are pretty dumb)). Here was the data flow that we came up with:
+So the next thing we tried was creating a robotic arm that would physically press buttons on the keypads on my phone. We built a three-axis arm out of three servo motors and 3D printed parts, but that ended up being the most questionable piece of engineering either of us had seen. So we abandoned that idea. Darn.
 
-1. Google Assistant does magical wagical AI to detect a user intent to open the gate.
-2. Google Assistant servers callback a server I had running on GCP
-3. GCP server sends a message down a websockety socket to a RasPi sitting in my garage
-4. RasPi activates one of its GPIO pins
-5. GPIO pins completes the circuit on a soldered-on garage opener PCB
-6. The Light Gods send a fancy dancy signal to my gate, which makes the doors open
-7. On success, data flows backwards to notify the user whether their wish was granted
+Then one day, while coming home from some place, I realized that our cars can communicate with the gate—wirelessly!—with the remote control we had in the glove compartment. At that moment, I ran to my room, found an old garage door opener, paired it with the gate, and then took it apart. Looking at the buttons and the circuits on the inside, I saw that all that the button was doing was completing a circuit that would send out one of three signals.
 
-<h3>Takeaways</h3>
+<h3>Building the Hardware</h3>
 
-One of the most important lessons I learned from this project is to exhale when soldering. Lead doesn't feel that great when you inhale it. It's not like those Jewel Pods that the kidz these dayz are doing.
+I took these findings to Ryan, the resident hardware expert, and he suggested we use some transistors from the Computer Architecture class we took in highschool to programatically complete circuits on the repurposed garage door opener. On a separate PCB, we connected each circuit on the garage door opener through a 60 V 0.2 A transistor, whose base we pulled down with a 10K resistor. We also attached the base to a GPIO pin on an adjacent Raspberry Pi so that we could programatically send signals to our gate, garage door, or anything else that was infrared powered.
 
-I also learned about GPIO pins for the first time. I didn't know that that was a thing. It was pretty magical to make my first leap from the software world into the hardware world.
+Here's a picture of the hardware:
+
+<PostImage src="/projects/compound-security-pi.jpg" />
+
+<h3>Building the Software</h3>
+
+Now that the hardware was setup, it was time to build the software! At first, I thought that I'd just have the Google Assistant servers send commands to my RasPi, but that presented a huge security issue: I'd have to configure our home network to allow incoming network connections. Since I knew little about network security, I decided to go with an alternative solution: websockets. When the RasPi booted, I'd have it establish a websocket connection to an intermediary GCP server that would be the relay between the Google Assistant servers and my RasPi. The flow ended up looking as follows:
+
+1. Google Assistant servers detect user intent using fancy AI
+2. Google Assistant servers send my GCP server the parsed intent
+3. GCP server sends the intent down its websocket to the RasPi
+4. RasPi parses the intent and activates one of its GPIO pins
+5. GPIO pin being pulled high completes the circuit on the adapted garage door opener, and sends a signal
+6. Gate opens, and a message is sent back the other direction, ending with the user, that the operation succeeded
+
+I spent most of my time wrestling with the Google Assistant's Javascript SDK. Configuring intents through the SDK was infuriating (though I can't remember why specifically), so my advice to anybody trying to make a Google Assistant integration is to use Dialogflow, their console-based assistant configuration tool.
+
+Apart from that, most other things went smoothly. Once I had setup my intermediary server on <span>home.ramaswamy.org</span> (which I have since taken offline), the websockets connected easily, the Google Assistant was calling me back consistently, and I placed the RasPi in a water-proof container in view of my gate. After months of iteration, it worked!
 
 <h3>Conclusion</h3>
 
-I really could go into more technical detail about how all this worked and how some of this made me want to throw my head against a wall, but what's the fun in that. I also could put up pictures, but I don't have any since I didn't have that much foresight back then. But it did work, and my parents were impressed. What more can I ask for in life?
+This was the first non-school project I did that lived at the intersection of hardware and software. GPIO pins were cool—they really were the stalwarts of the soft-hard transition. Most importantly, this ended up being something that I used on a daily basis, _and_ my parents thought it was cool. What more could I ask for?

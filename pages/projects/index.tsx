@@ -1,16 +1,15 @@
 import { Header } from 'components/Header'
-import { PostPreview } from 'components/PostPreview'
-import { frontMatter as blogPosts } from './**.mdx'
 import { PreviewContainer } from 'components/PreviewContainer'
+import { frontMatter as projectPosts } from './**.mdx'
 
-const Blog = (): JSX.Element => {
+const Projects = (): JSX.Element => {
     return (
         <div>
             <Header />
 
-            <PreviewContainer postFrontMatter={blogPosts} />
+            <PreviewContainer postFrontMatter={projectPosts} />
         </div>
     )
 }
 
-export default Blog
+export default Projects

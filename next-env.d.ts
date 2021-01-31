@@ -9,6 +9,7 @@ declare namespace MdxEnhanced {
         title?: string
         description?: string
         author?: string
+        gradient?: string
         __resourcePath?: string
     }
 }

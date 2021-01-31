@@ -10,7 +10,7 @@ export const PreviewContainer = (props: Props): JSX.Element => {
     return (
         <div className={styles.container}>
             {postFrontMatter.map((frontMatter) => (
-                <PostPreview frontMatter={frontMatter} />
+                <PostPreview key={frontMatter.__resourcePath} frontMatter={frontMatter} />
             ))}
         </div>
     )

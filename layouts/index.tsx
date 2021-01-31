@@ -18,7 +18,6 @@ const PostLayout = (props: PropsWithChildren<Props>): JSX.Element => {
             <div className={styles.metaContainer}>
                 <h2 className={styles.title}>{title}</h2>
                 <h5 className={styles.author}>{author}</h5>
-                <p className={styles.description}>{description}</p>
             </div>
             {children}
         </div>

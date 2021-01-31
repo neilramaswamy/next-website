@@ -7,14 +7,22 @@ interface Props {
 
 export const PostPreview = (props: Props): JSX.Element => {
     const { frontMatter } = props
-    const { title, author, description, __resourcePath } = frontMatter
+    const { title, description, gradient, __resourcePath } = frontMatter
 
     if (!__resourcePath) {
         return <></>
     }
 
+    let style: React.CSSProperties = {}
+    if (gradient) {
+        const colors = gradient.split(',')
+        if (colors.length === 2) {
+            style.backgroundImage = `linear-gradient(120deg, ${colors[0]} 0%, ${colors[1]} 100%)`
+        }
+    }
+
     return (
-        <GenericLink link={__resourcePath} className={styles.container}>
+        <GenericLink link={__resourcePath} className={styles.container} style={style}>
             <div>
                 <div className={styles.imageContainer} />
 

@@ -3,6 +3,7 @@ import { FlairText } from 'components/FlairText'
 import { Header } from 'components/Header'
 import { Flair } from 'config/config'
 import styles from 'styles/Home.module.scss'
+import Image from 'next/image'
 
 const Home = (): JSX.Element => {
     const leftColumn = (
@@ -12,19 +13,19 @@ const Home = (): JSX.Element => {
             </h1>
 
             <p>
-                I'm currently studying CS at{' '}
-                <FlairText flair={Flair.BrownU}>Brown University</FlairText>, but I've taken many
-                music and english classes. I'm also working on{' '}
-                <FlairText flair={Flair.Orbyt}>Orbyt</FlairText>, the best way to manage your
-                network.{' '}
+                I'm currently concentrating in CS at{' '}
+                <FlairText flair={Flair.BrownU}>Brown</FlairText>, but I'm concurrently taking many
+                English and Music classes. I'm also working on{' '}
+                <FlairText flair={Flair.Orbyt}>Orbyt</FlairText>, the best way to stay connected to
+                those in your network who matter most.{' '}
             </p>
 
             <p>
-                I'm still putting this site together, so you can check out my empty{' '}
-                <FlairText flair={Flair.Blog}>blog</FlairText> if you don't like reading. I'll
-                upload my writing there soon. I really recommend you don't check out the stuff over
-                on <FlairText flair={Flair.Projects}>my projects page</FlairText>, as the content
-                there is unstyled and intellectually vacuous (for now)!
+                I'm still putting this site together, but my{' '}
+                <FlairText flair={Flair.Projects}>projects page</FlairText> has a few technical
+                posts about some of my favorite projects. I'll be putting any of my other writing on
+                my <FlairText flair={Flair.Blog}>blog</FlairText>, which is sparse now, but it won't
+                be for long!
             </p>
         </div>
     )

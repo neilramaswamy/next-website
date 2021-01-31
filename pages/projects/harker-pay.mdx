@@ -1,19 +1,55 @@
 ---
 title: 'Harker Pay'
-author: 'Neil Ramaswamy, Rithvik Panch, Ryan Adolf, and David Melisso'
-description: 'Highschool admins trust juniors to make payment system and it goes surprisingly well'
+author: 'Neil Ramaswamy, Rithvik Panchapakesan, Ryan Adolf, and David Melisso'
+description: "How 4 highschoolers designed a payment system that's processed > $250K"
+gradient: '#338018,#0a6d5f'
 ---
 
 <h3>Introduction</h3>
 
-We were like, "OMG, people's munney is getting stolen!" So then we were like "OMG let's write some codez! We totally know what we're doing!"
+In the summer of 2017, I was thinking about ways in which to improve campus life at my highschool. I wondered whether I could make easier the way that students paid for items at the snack bar. At the time, to purchase something, students would write down their name and amount on a charge sheet. This system, unsurprisingly, led to incorrect charges and lots of manual data entry. My first idea was to get a barcode reader, hook it up to a laptop, and scan students' IDs when they wanted to buy item. However, I had absolutely no clue how something like that would work, so I approached HarkerDev: the student-run development team that I would soon join and build Harker Pay with.
 
-So we did some bad designs and some good codez and then here we are, $250,000 processed. Unfortunately, John Lynch was like "aw heck nah, I hate Typescript! Instead of Typescript, we're going to use C#".
+<h3>The Design Process</h3>
 
-<h3>Design Fails</h3>
+We started with a basic idea: make payments better at our highschool. From there, we talked to many of the staff members involved with the payment system and gleaned some information about existing problems:
 
-So apparently at some point people thought Harker Pay was free money. I swear, we put dollar signs all over the app and made it clear that people would get CHARGED, but it's still a design fail if a user thinks that a payment app is using a free-money currency. I had to make an announcement at school meeting that Harker Pay wasn't free money. You would be happy to know that we are all now studying Computer Science.
+-   Campus staff would spend at least 10 hours a week manually entering charges into a system
+-   Sometimes charge sheets would have erroneous charges (someone puts another student's name down)
+-   Parents wouldn't have any ability to control how much their children spent
+-   Vendors wouldn't have an easy way to keep track of what they sold
 
-<h3>The End</h3>
+Out of all the projects I worked on, the user research for Harker Pay was the easiest, because _everybody_ on campus was affected (usually negatively) by the existing payments system. My main takeaway from this almost-trivial user research is that if you want to gain experience building product, definitely start with something everybody around you needs. It's much easier to interview yourself and your friends than strangers over Zoom!
 
-John rewrote Harker Pay in C# and so our code died. But I actually did design the favicon, which is still in use. So that's pretty lit.
+From here, we drafted up a product flush with product features that would address these problems. We put these together in a document for our school's finance department, as well as some mock-ups of what the product would look like. After a few more meetings with the administration and Student Council, we refined our product features into the following:
+
+-   The student-side flow
+    -   Each student would sign into the system using school credentials
+    -   Students looking to buy would get a unique QR code with a 1 minute TTL
+    -   Vendors could scan a QR code to charge that student
+    -   Student would have to accept the charge for the transaction to complete
+-   Other flows
+    -   Parents could sign-in to view their childrens' exact spend history and place monetary caps on spend
+    -   Administrators could sign-in to instantly generate Excel sheets that were used to charge parents
+    -   Vendors could add inventory to Harker Pay to get stats on what sold best, worst, etc.
+
+<h3>Some Technical Tidbits</h3>
+
+Unfortunately, all the code is hosted on Harker Dev's private Git servers, so I can't link to anything specific. But I can, however, talk about some interesting aspects of what I worked on.
+
+-   Calendar Integration
+    -   As more and more people wanted Harker Pay to sell (we increased on-campus commerce!), it became impossible to manually manage who had vendor permissions. So I designed a system where prospective organizations looking to sell could book time on a shared Google Calendar, and if we accepted the booking, our system would enable vendorship for them.
+    -   At the end of a vendor's selling period, we'd automatically email out a charge sheet to the finance department.
+-   Charge Sheets
+    -   I had the luxury of working with legacy systems! The Excel charge sheet the finance department required was in a strict format, so I wrote scripts that would read relevant transactions from our database and format them nicely on the Excel sheet.
+    -   I also wrote verification scripts that would worked in the opposite direction: using data from the generated Excel sheet, we'd verify that the data there matched up with the Database.
+-   Parent control over charges
+    -   I implemented the parts of our API that allowed parents to set caps on how much their children could spend every specified time interval (like, "$5 every week this month").
+    -   Unfortunately, this never shipped because our school wasn't comfortable with us handling auth for parents.
+
+Those are most of the technical aspects of the product that I worked on. This project wouldn't at all have been possible without the phenomenal Ryan, Rithvik, and David, so I'll let them take to their own blog posts to explain what wonderful parts of this product they implemented.
+
+<h3>Conclusion</h3>
+
+Harker Pay was the first project I worked on that had _real_ usage. It's a great feeling when your servers crash because too many people are trying to use your product. At some points, we had over 300 concurrent users all making payments (there was an ice-cream truck that day!). By the time I had graduated, Harker Pay had processed over a quarter million dollars. As Ryan, Rithvik, David, and I were all graduating, we passed down Harker Pay to the future generation of Harker Dev, who now maintain it themselves.
+
+I'm grateful that Harker let us deploy this product to the school, and I'm even more grateful that students to this day are still using the product that my friends and I created, once upon a time.

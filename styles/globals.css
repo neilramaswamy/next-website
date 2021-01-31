@@ -24,6 +24,7 @@
     --fs-3: 1.953rem;
     --fs-4: 1.563rem;
     --fs-5: 1.25rem;
+    --fs-6: 1rem;
     --fs-small: 0.75rem;
 
     /* Font weights */
@@ -95,7 +96,8 @@ h1,
 h2,
 h3,
 h4,
-h5 {
+h5,
+h6 {
     font-family: var(--ff-main);
     font-weight: var(--fw-main-default);
 
@@ -122,6 +124,10 @@ h4 {
 
 h5 {
     font-size: var(--fs-5);
+}
+
+h6 {
+    font-size: var(--fs-6);
 }
 
 small {
