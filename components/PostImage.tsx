@@ -1,7 +1,6 @@
-import { HTMLProps } from 'react'
 import styles from './PostImage.module.scss'
 
-interface Props extends HTMLProps<HTMLImageElement> {}
+type Props = JSX.IntrinsicElements['img']
 
 export const PostImage = (props: Props): JSX.Element => {
     const { className, ...passThrough } = props
