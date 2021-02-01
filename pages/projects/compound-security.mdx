@@ -11,15 +11,15 @@ import { PostImage } from '../../components/PostImage'
 
 <h3>Introduction</h3>
 
-Before I went to college (the summer of 2019), I worked with my good friend Ryan Adolf to create "Compound Security," a voice-powered assistant that would open unlock/open entry ways into one's house (like their garage door, for example). For me, I wanted to be able to open the gate to my driveway with my Google Assistant. Because we're not far enough in the future yet, garage doors and gates generally don't have APIs! So this project found us doing a lot of reverse engineering to be able to get big pieces of metal to open gracefully, all within 10 spoken words.
+Before I went to college (the summer of 2019), I worked with my good friend Ryan Adolf to create "Compound Security," a voice-powered assistant that would unlock/open entry ways into one's house (like their garage door, for example). For me, I wanted to be able to open the gate to my driveway with my Google Assistant. Because we're not far enough in the future yet, garage doors and gates generally don't have APIs! So this project found us doing a lot of reverse engineering to be able to get big pieces of metal to open gracefully, all within 10 spoken words.
 
 <h3>Finding the Hardware Solution</h3>
 
-We first analyzed how the gate mechanism worked at the time: I could punch in 4 digits into my landline, and the gate would magically open! While we weren't sure how the data was flowing from the landline to the gate itself, we first tried to see if we could programatically generate dial tones and feed that through a landline interface somewhere around my house. While generating the dial tones with SoX from the command line was pretty easy, we never managed to successfully send it through any landline interfaces. Darn.
+We first analyzed how the gate mechanism worked at the time: if I was inside the house, I could punch in 4 digits into my landline, and the gate would magically open! While we weren't sure how the data was flowing from the landline to the gate itself, we first tried to see if we could programatically generate dial tones and feed that through a landline interface. While generating the dial tones with <code>SoX</code> from the command line was pretty easy, we never managed to successfully send it through any landline interfaces. Darn.
 
-So the next thing we tried was creating a robotic arm that would physically press buttons on the keypads on my phone. We built a three-axis arm out of three servo motors and 3D printed parts, but that ended up being the most questionable piece of engineering either of us had seen. So we abandoned that idea. Darn.
+So the next thing we tried was creating a robotic arm that would physically press buttons on the keypads on my phone. We built a three-axis arm out of three servo motors and 3D-printed parts, but that ended up being the most questionable piece of engineering either of us had seen. So we abandoned that idea. Darn.
 
-Then one day, while coming home from some place, I realized that our cars can communicate with the gate—wirelessly!—with the remote control we had in the glove compartment. At that moment, I ran to my room, found an old garage door opener, paired it with the gate, and then took it apart. Looking at the buttons and the circuits on the inside, I saw that all that the button was doing was completing a circuit that would send out one of three signals.
+Then one day, while coming home from work, I realized that our cars can communicate with the gate—wirelessly!—with the remote control we had in the glove compartment. At that moment, I ran to my room, found an old garage door opener, paired it with the gate, and then took it apart. Looking at the buttons and the circuits on the inside, I saw that all that the button was doing was completing a circuit that would send out one of three signals.
 
 <h3>Building the Hardware</h3>
 
@@ -31,7 +31,7 @@ Here's a picture of the hardware:
 
 <h3>Building the Software</h3>
 
-Now that the hardware was setup, it was time to build the software! At first, I thought that I'd just have the Google Assistant servers send commands to my RasPi, but that presented a huge security issue: I'd have to configure our home network to allow incoming network connections. Since I knew little about network security, I decided to go with an alternative solution: websockets. When the RasPi booted, I'd have it establish a websocket connection to an intermediary GCP server that would be the relay between the Google Assistant servers and my RasPi. The flow ended up looking as follows:
+Now that the hardware was setup, it was time to build the software! At first, I thought that I'd just have the Google Assistant servers send commands to my RasPi, but that presented a huge security issue: I'd have to configure our home network to allow incoming network connections. I decided to go with an alternative solution: websockets. When the RasPi booted, I'd have it establish a websocket connection to an intermediary GCP server that would be the relay between the Google Assistant servers and my RasPi. The flow ended up looking as follows:
 
 1. Google Assistant servers detect user intent using fancy AI
 2. Google Assistant servers send my GCP server the parsed intent
@@ -42,7 +42,7 @@ Now that the hardware was setup, it was time to build the software! At first, I 
 
 I spent most of my time wrestling with the Google Assistant's Javascript SDK. Configuring intents through the SDK was infuriating (though I can't remember why specifically), so my advice to anybody trying to make a Google Assistant integration is to use Dialogflow, their console-based assistant configuration tool.
 
-Apart from that, most other things went smoothly. Once I had setup my intermediary server on <span>home.ramaswamy.org</span> (which I have since taken offline), the websockets connected easily, the Google Assistant was calling me back consistently, and I placed the RasPi in a water-proof container in view of my gate. After months of iteration, it worked!
+Apart from that, most other things went smoothly. Once I had setup my intermediary server on <span>home.ramaswamy.org</span> (which I have since taken offline due to costs), the websockets connected easily, the Google Assistant was calling me back consistently, and I placed the RasPi in a water-proof container in view of my gate. After months of iteration, it worked! I could say, "Hey Google, open the car gate" or "Hey Google, open the garage door," and my wish would be granted!
 
 <h3>Conclusion</h3>
 
