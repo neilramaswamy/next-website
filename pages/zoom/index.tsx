@@ -1,4 +1,4 @@
-import { NextPageContext, NextPage } from 'next'
+import { NextPageContext, NextPage, NextComponentType } from 'next'
 import { InternalLinks } from 'config/config'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -7,7 +7,7 @@ interface Props {
     Location: string
 }
 
-const Zoom: NextPage<unknown> = (props: Props): JSX.Element => {
+const Zoom: NextComponentType<NextPageContext, Props> = (props: Props): JSX.Element => {
     const { Location } = props
     const router = useRouter()
 
@@ -19,7 +19,7 @@ const Zoom: NextPage<unknown> = (props: Props): JSX.Element => {
     return <p>You should be redirected shortly.</p>
 }
 
-Zoom.getInitialProps = (): Props => {
+Zoom.getInitialProps = (ctx: NextPageContext): Props => {
     const zoomLink = process.env['ZOOM_LINK']
     if (zoomLink) {
         return { Location: zoomLink }
