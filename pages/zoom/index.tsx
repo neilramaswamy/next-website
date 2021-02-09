@@ -1,13 +1,15 @@
-import { InternalLinks } from 'config/config'
-import { useRouter } from 'next/router'
+import React from 'react'
 
 const Zoom = (): JSX.Element => {
-    const router = useRouter()
     const zoomLink = process.env['ZOOM_LINK']
 
-    zoomLink ? router.push(zoomLink) : router.push(InternalLinks.Home)
+    React.useEffect(() => {
+        if (zoomLink) {
+            window.location.href = zoomLink
+        }
+    }, [])
 
-    return <></>
+    return zoomLink ? <p>You will be redirected shortly.</p> : <p>Oh no! No Zooming today :(</p>
 }
 
 export default Zoom
