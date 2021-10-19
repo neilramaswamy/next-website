@@ -1,7 +1,7 @@
-import { Note } from '@tonaljs/core'
+import { note, Note } from '@tonaljs/core'
 import { toMidi } from '@tonaljs/midi'
 import styles from './Board.module.css'
-import { Key } from './Key'
+import Key from './Key'
 import { countWhiteNotes, isBlackKey, notesBetween } from './util'
 
 // Relative to the width of a white key
@@ -16,7 +16,7 @@ interface BoardProps {
     highlights: string[]
 }
 
-export const Board = (props: BoardProps): JSX.Element => {
+const Board = (props: BoardProps): JSX.Element => {
     const { width, lowestNote, highestNote, highlights, onKeyClick } = props
 
     const rawNotes = notesBetween(lowestNote, highestNote)
@@ -56,6 +56,7 @@ export const Board = (props: BoardProps): JSX.Element => {
                 isWhiteKey={isWhiteKey}
                 highlighted={highlights.map((h) => toMidi(h)).includes(toMidi(currNote.name))}
                 whiteKeyWidth={whiteKeyWidth}
+                key={currNote.name}
             />,
         )
     }
@@ -66,3 +67,5 @@ export const Board = (props: BoardProps): JSX.Element => {
         </div>
     )
 }
+
+export default Board

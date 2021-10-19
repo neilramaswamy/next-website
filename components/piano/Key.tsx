@@ -17,7 +17,7 @@ interface KeyProps {
     isWhiteKey: boolean
 }
 
-export const Key = (props: KeyProps): JSX.Element => {
+const Key = (props: KeyProps): JSX.Element => {
     const { x, y, onClick, whiteKeyWidth, isWhiteKey, highlighted } = props
 
     let width: number, height: number
@@ -45,3 +45,5 @@ export const Key = (props: KeyProps): JSX.Element => {
         />
     )
 }
+
+export default Key
