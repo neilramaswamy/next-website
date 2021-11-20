@@ -1,29 +1,61 @@
 ---
-title: 'Spin Locks and Condition Variables Made Easy'
+title: 'Locks and Condition Variables: an Intuitive Tale and an Application'
 author: 'Neil Ramaswamy'
 description: 'A simple tutorial on how to use spin locks and condition variables'
 gradient: '#d8403e,#500027'
 ---
 
-<marquee>
-    DO NOT READ THIS. IT IS A V1 DRAFT BUT MY WEBSITE HAS NO DRAFT FUNCTIONALITY YET!!! IT IS
-    CORRRECT BUT UNPOLISHED AND WILL LIKELY LEAVE YOU CONFUSED. PLEASE EXIT!
-</marquee>
+import { GenericLink } from '../../components/GenericLink'
 
 <h3>Context</h3>
 
-In Fall 2020, I took Brown's CS 33 course, which was its introduction to systems programming. I did not understand any of the content around mutexes (locks) and condition variables (in fact, I didn't understand how or why they were related, and when I asked the TAs, they said to just accept it.) The topic always fascinated me, so two years later I took Multiprocessor Synchronization, taught by Maurice Herlihy, who, if you don't know, is a synchronization demi-god. Today it all clicked for me. Thanks Maurice. You're awesome!
+In Fall 2020, I took Brown's CS 33 course, which was its introduction to systems programming. I did not understand any of the content around mutexes (locks) and condition variables (in fact, I didn't understand how or why they were related, and when I asked the TAs, they said to just accept it.) The topic always fascinated me, so two years later I took <GenericLink link="http://cs.brown.edu/courses/cs176/">Multiprocessor Synchronization</GenericLink>, taught by <GenericLink link="https://cs.brown.edu/~mph/">Maurice Herlihy</GenericLink>. Today it all clicked for me. Thanks Maurice. (This post has been edited since I first wrote it.)
 
-<h3>Content</h3>
+<h3>How to Read This Post</h3>
 
-Locks (mutexes, but I'm calling them locks) and condition variables are very intertwined! Let's say that we have a thread A that needs to withdraw money from a bank vault. Only one person is allowed in the vault at a time. Thread A needs to "unlock" the door to the vault to get in. Once you're in, nobody else can get in.
+The green expandable boxes discuss how the tale the previous paragraph relates to "real" ideas in computer science. The main tale (default paragraph text) exists to give you an intuitive (hopefully entertaining) idea of how locks, condition variables, and threads work together. Only open the boxes if you understand the story!
 
-Let's say that thread A really wants to pull money from the vault. It gets the lock, enters the vault, but there's no money! So it exits, and it waits. It keeps checking. While it is still alive, it keeps checking. It <it>spins</it>, unlocking then locking the vault, checking to see if money is put in. All this spinning makes it dizzy, and the bank vault gets mad since it's like, getting badgered all the time!
+<h3>A Tale Involving a Lock, Condition Variable, and Some Threads</h3>
 
-Instead, of spinning, while A is in the vault, A makes a deal with the vault. It says, "yo, vault, can you give me a little pager that will tell me when someone finally puts money in here?" Vault's like "yeah man, here you go, here's a pager. If you go to sleep and I get money, I'll ring the pager, and then you should wake up." So then the lock leaves the vault, goes to sleep, and puts the pager next to the bed, and awaits for it to ring.
+Let's say that we have a bank vault that contains money and several people that want to withdraw money from the vault. Suppose only one person is allowed into the vault at a time, and that the door to the vault only lets in one person at a time. If we have multiple people that want access at the same time, only one lucky person will get through.
 
-Then, finally, when someone deposits money, the vault rings the condition! Thread A wakes up! The pager, on behalf of thread A, locks the vault in preparation for A to enter. Hey look now there's money!
+From this construction, we have our characters:
 
-Waking up and finding money is the good case. Consider the bad case. You wake up, go check the vault, but there's no money. Then you get mad at the vault. What the heck man! You said that there was money. "Well, there _was_ money, but then someone got to it before you did."
+1. We have a shared resource: the money in the vault.
+2. We have a lock: the vault door. It guards the vault, making sure only one thread is in the vault at once.
+3. We have our threads: our people depositing/withdrawing money.
 
-That happens because the vault could wake up many threads. The vault wakes up threads A and B (B was also snooping for cash), B gets into the vault before A, B takes all the money, and then when A finally checks, there's nothing! So then A needs to go back to sleep. That's why, whenever you use a condition variable.await, you need to wrap it in a while loop! So _while_ the condition of not seeing money is the vault is met, then go to sleep with the pager (condition variable) on your bedside table.
+Let's now run through a hypothetical situation. For the rest of the post, we'll just use "thread" to refer to a person. Let's say that threads A and B really want to pull money from the vault. They each get access from the door, enter the vault, but there's never any money! So they exit, and they wait. They keep checking the vault for money (one at a time, of course). Until they find money, they keep checking the vault. They <it>spin</it>, repeatedly gaining access to the vault, checking to see if money is put in, and if not, relinquishing access to the vault. All this spinning makes them dizzy! They don't really want to go through that. Is there a less dizzying way to know when money finally makes it into the vault?
+
+<details>
+    <summary>The Problem with Spinning</summary>
+    Here, I'll talk more about why spinning, i.e. constantly locking and unlocking the vault to check
+    if money has been added, is less than ideal. But briefly, a few bad things can happen due to spinning,
+    including: the CPU running cycles for threads doing busy (useless) work and lock-slowdown due to
+    high lock contention.
+</details>
+
+Instead of spinning, threads A and B each ask the vault for a pager, and say "if another thread ever deposits money, tell them to page me. I'm going to go to sleep right now, but if my pager ever rings, I'll come right back to the vault to check for some money." So the vault gives threads A and B a pager, under the condition that the pagers will "ring" when the vault gets some money. Then threads A and B go to sleep and put the pagers next to their beds, and wait for it to ring.
+
+<details>
+    <summary>The Condition Variable Enters</summary>
+    The "pager" in our story is a condition variable. It is tied to a lock and the underlying resource,
+    i.e. our vault and the door. You can await a condition variable, which will put you to sleep, and
+    you'll be woken up once the condition <em>might</em> be true. I should elaborate on this section.
+</details>
+
+Santa comes that night. He slides down the chimney of the bank (unclear if banks have chimneys), gracefully, elegantly. Surprise! Santa is thread C. Santa gets into the vault—oh how sly, secretive, skillful—and deposits money in the vault. On his way out, faithful as ever, he pages the two threads that have pagers, who sleep so slumberously on the nearby sofas. He then leaves, and the threads' pagers ring. Boom! They're up, on their feet. They both scramble to the door, clawing, racing—who is going to win? Who will get the money first...
+
+Thread A wins! Thread A enters the vault, locks the door (so that thread B can't get in), takes the money, and leaves. Thread A leaves, and now Thread B gets in, who, to its dismay, sees no money. So what does it do? Instead of pouting (Santa wouldn't like that), it goes to sleep again, putting its pager by its bed with the hope that if someone (Mrs. Claus? Thread D?) subsequently puts money in, it'll be paged, get into the vault, and find some money.
+
+<details>
+    <summary>Being Woken Up</summary>
+    We just saw that sometimes, many threads all contend for the same resource, i.e. many threads content for the money in the vault. Critically though, even if they all wake up, only one will ultimately gain access to the resource, since it is guarded by a lock (i.e. the door). So if you wake up and you find that the resource you were looking for isn't there, it's likely that some other thread "beat you out". In our story, thread A beats out thread B. As a result, thread B has to go back to sleep. Thread B will repeatedly keep going back to sleep <em>while</em> the condition (i.e. money in the bank for it to take) is not satisfied. That's why you will <em>always</em> want to wrap sleeping on a condition variable in a while loop. You'd have something like:
+
+    while (!condition) {
+        // Go to sleep, and wait for someone to wake me up
+        conditionVariable.await();
+        // When this thread is woken up, execution will resume here.
+    }
+
+</details>

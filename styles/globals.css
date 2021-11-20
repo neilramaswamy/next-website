@@ -92,6 +92,24 @@ button {
     border: none;
 }
 
+details {
+    padding: 12px;
+    background-color: var(--c-green);
+    border-radius: 6px;
+}
+
+details summary {
+    cursor: pointer;
+}
+
+details summary > * {
+    display: inline;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
 h1,
 h2,
 h3,
