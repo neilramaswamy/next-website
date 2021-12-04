@@ -1,5 +1,6 @@
 import { Flair, FlairToLink } from 'config/config'
 import Link from 'next/link'
+import { CodeBlock } from 'react-code-blocks'
 import { isLinkQualified } from 'util/isLinkQualified'
 import styles from './FlairText.module.scss'
 import { GenericLink } from './GenericLink'
