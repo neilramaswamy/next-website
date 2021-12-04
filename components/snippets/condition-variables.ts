@@ -7,12 +7,12 @@ public void withdrawNaively() {
     vault.lock();
 
     while (!vault.hasMoney()) {
-        // Unlock to let others in
+        // If we got here, there was no money: unlock to let others in.
         vault.unlock();
+        // Sleep for a second to give others the opportunity to enter
+        sleep(1000);
 
-        // Other threads might be locking vault here, before we do...
-
-        // Re-lock before we call vault.isEmpty() at the next loop
+        // Lock before we re-loop and run vault.hasMoney() on L4
         vault.lock();
     }
 

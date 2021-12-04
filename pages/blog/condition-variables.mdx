@@ -110,7 +110,7 @@ Finally, we just consider what it looks like for a depositing thread to "ring" t
     wrapLines
 />
 
-With all these snippets, we have a pretty efficient vault. There are two core principles that you should take away from this article:
+With all these snippets, we have a pretty efficient vault. There are a few core principles that you should take away from this article:
 
 1. Before every withdrawing/depositing/checking the vault, your thread needs to have it locked. That's why all functions here start with `vault.lock()`. When you're done, call `unlock()`. This is pretty standard concurrent programming practice.
 2. When waiting for a shared resource to get into a particular state, use a condition variable. Threads waiting for that state to occur should wait on the condition variable, and threads that _cause_ that particular state (i.e. a thread putting in money) should ring/signal the condition variable.
