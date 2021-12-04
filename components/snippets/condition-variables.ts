@@ -16,9 +16,9 @@ public void withdrawNaively() {
         vault.lock();
     }
 
-    // vault.hasMoney must have been true on L9: yay, we have the money!
+    // vault.hasMoney() must have been true on L9: yay, we have the money!
     vault.withdrawAll();
-    // Unlock your locks to prevent deadlock
+    // Unlock the lock to prevent deadlock
     vault.unlock();
 }
 
@@ -50,7 +50,7 @@ public void withdrawWithCondVar() {
         // When we wake up, we'll be here, with vault already locked for us!
     }
 
-    // vault.hasMoney must have been true on L10: yay, we have the money!
+    // vault.hasMoney() must have been true on L10: yay, we have the money!
     vault.withdrawAll();
     vault.unlock();
 } 
@@ -62,7 +62,7 @@ public void deposit(int money) {
 
     vault.deposit(money);
     // We just put money, so the vault is not empty anymore. 
-    // This call would wake up threads A and B.
+    // This call will wake up threads A and B.
     vaultNotEmptyAnymore.wakeUpAll();
 
     vault.unlock();

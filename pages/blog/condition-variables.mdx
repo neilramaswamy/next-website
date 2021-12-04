@@ -13,7 +13,7 @@ import { vs2015 } from 'react-code-blocks'
 
 <h3>Context</h3>
 
-In Fall 2020, I took Brown's CS 33 course, which was its introduction to systems programming. I did not understand any of the content around mutexes (locks) and condition variables (in fact, I didn't understand how or why they were related, and when I asked somem TAs, I didn't receive too great an answer.) The topic always fascinated me, so two years later I took <GenericLink link="http://cs.brown.edu/courses/cs176/">Multiprocessor Synchronization</GenericLink>, taught by <GenericLink link="https://cs.brown.edu/~mph/">Maurice Herlihy</GenericLink>. I understand these concepts now, and I'd like to help you understand them too!
+In Fall 2020, I took Brown's CS 33 course, which was its introduction to systems programming. I did not understand any of the content around mutexes (locks) and condition variables (in fact, I didn't understand how or why they were related, and when I asked some TAs, I didn't receive too great an answer.) The topic always fascinated me, so one year later I took <GenericLink link="http://cs.brown.edu/courses/cs176/">Multiprocessor Synchronization</GenericLink>, taught by <GenericLink link="https://cs.brown.edu/~mph/">Maurice Herlihy</GenericLink>. I understand these concepts now, and I'd like to help you understand them too!
 
 <h3>A Story Involving a Lock, Condition Variable, and Some Threads</h3>
 
@@ -97,7 +97,7 @@ Recall that we said we could do better. We would create a condition variable, an
     wrapLines
 />
 
-Read the comment inside of that last while loop carefully. Because we want to make sure that we're not holding onto the vault's lock while we're sleeping (if we were, then depositing threads wouldn't be able to put money into the vault, since they need the lock for that), the call to the wait function on the condition variable first unlocks the associated lock (defined on line 1). Then, right before we wake up the condition variable re-locks its associated lock, because we want the `hasMoney()` call to happen mutually exclusively.
+Read the comment inside of that last while loop carefully. Because we want to make sure that we're not holding onto the vault's lock while we're sleeping (if we were, then depositing threads wouldn't be able to put money into the vault, since they need the lock for that), the call to the wait function on the condition variable first unlocks the associated lock (defined on line 1). Then, right before we wake up, the condition variable re-locks `vault` because we want the `hasMoney()` call to happen mutually exclusively.
 
 Finally, we just consider what it looks like for a depositing thread to "ring" the condition variable. See the snippet below:
 
