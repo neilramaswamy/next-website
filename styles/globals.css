@@ -4,6 +4,7 @@
     /* Type */
     --ff-main: 'Oswald', sans-serif;
     --ff-secondary: 'Old Standard TT', serif;
+    --ff-monospace: monospace;
 
     /* Colors */
     --c-heading-text: #fff;
@@ -15,6 +16,8 @@
     --c-blue: #3498db;
     --c-purple: #9b59b6;
     --c-red: #e74c3c;
+    --c-orange: #f39c12;
+    --c-pink: #fb79b3;
 
     /* Base font size */
     --fs-base: 16px;

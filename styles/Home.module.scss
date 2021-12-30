@@ -52,3 +52,12 @@
         border-radius: 20px;
     }
 }
+
+.imNeil {
+    user-select: none;
+    transition: color 500ms ease;
+}
+
+.ryansRequest {
+    color: var(--c-pink);
+}

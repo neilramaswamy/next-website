@@ -3,13 +3,24 @@ import { FlairText } from 'components/FlairText'
 import { Header } from 'components/Header'
 import { Flair } from 'config/config'
 import styles from 'styles/Home.module.scss'
-import Image from 'next/image'
+import React from 'react'
+import cc from 'util/cc'
 
 const Home = (): JSX.Element => {
+    const [neilClicks, setNeilClicks] = React.useState(0)
+
     const leftColumn = (
         <div className={`${styles.textContainer} ${styles.column}`}>
             <h1>
-                Hi, web wanderer! <br /> I'm Neil.
+                Hi, web wanderer! <br />{' '}
+                <span
+                    className={cc(styles, 'imNeil', neilClicks > 1 && 'ryansRequest')}
+                    onClick={() => {
+                        setNeilClicks(neilClicks + 1)
+                    }}
+                >
+                    I'm Neil.
+                </span>
             </h1>
 
             <p>

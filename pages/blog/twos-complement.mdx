@@ -1,0 +1,34 @@
+---
+title: "Two's Complement Made Easy"
+author: 'Neil Ramaswamy'
+description: 'Derivations, Intuition, and Interactions'
+gradient: '#d8403e,#500027'
+---
+
+import { TwosComplementLabelled } from '../../components/twos-complement/TwosComplementLabelled'
+import { Center } from '../../components/Center'
+import { Spacer } from '../../components/Spacer'
+
+<h3>Inspiration</h3>
+
+Two's complement is pretty confusing. It's also hard to play with; unlike somemthing like pointers, which you can play around with in Replit, it's hard to tinker with two's complement. In this blog post, I hope to provide some interactive widgets that'll fill this void. Additionally, I'll provide a derivation of some of the two's complement rules (especially for negation) in a very simple way. I didn't look at anyone else's work here, so hopefully my derivation is original.
+
+Also, this post is under heavy construction. Until this message is removed, don't expect things to work just yet!
+
+<h3>A Prelude to the Two's Complement Widget</h3>
+
+Until I make this widget better, I'll have to briefly explain how to play with it.
+
+1. At the very bottom of the widget, you're able to control the width of the "integer". In practice, the width will be 16/32/64 bits, but I've reduced the bounds here so that everything fits on the screen.
+2. At the very right of the widget, you'll see a number with up and down chevrons. This allows you to increment and decrement the _decimal_ number being represented.
+3. As you change the decimal number, you'll see the numbers on the left change. The top row is the Two's Complement representation. The bottom row of numbers is what each bit mathematically represents in decimal. If you sum all of those numbers (which will be in red when non-zero), you'll arrive at the number between the up and down chevrons.
+
+Go ahead and play with it!
+
+<h3>Two's Complement Visualizer</h3>
+
+<Center>
+    <TwosComplementLabelled />
+</Center>
+
+<Spacer size={96} />
