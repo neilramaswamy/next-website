@@ -1,34 +1,112 @@
 ---
-title: "Two's Complement Made Easy"
+title: "Two's Complement and Data Type Limits"
 author: 'Neil Ramaswamy'
-description: 'Derivations, Intuition, and Interactions'
+description: 'Building a mental model for how—and to what extent—machines can store numbers'
 gradient: '#d8403e,#500027'
 ---
 
-import { TwosComplementLabelled } from '../../components/twos-complement/TwosComplementLabelled'
+import { TwosComplement } from '../../components/twos-complement/TwosComplement'
 import { Center } from '../../components/Center'
 import { Spacer } from '../../components/Spacer'
 
-<h3>Inspiration</h3>
+<h3>Everything I Ever Wanted</h3>
 
-Two's complement is pretty confusing. It's also hard to play with; unlike somemthing like pointers, which you can play around with in Replit, it's hard to tinker with two's complement. In this blog post, I hope to provide some interactive widgets that'll fill this void. Additionally, I'll provide a derivation of some of the two's complement rules (especially for negation) in a very simple way. I didn't look at anyone else's work here, so hopefully my derivation is original.
+Two's complement is pretty confusing. When I was "learning" it, I didn't understand our lectures, and nor did I understand most of the explanations on the internet. Most of the explanations I found were very precise, but didn't help build a mental model for how it worked. This post will give you that mental model. As far as I know, the interactable widgets on this site are the first of their kind (please correct me if I'm wrong). They're going to give you intuition—that you won't easily forget—for how two's-complement works. Ready?
 
-Also, this post is under heavy construction. Until this message is removed, don't expect things to work just yet!
+<h3>Two's Complement</h3>
 
-<h3>A Prelude to the Two's Complement Widget</h3>
+You might first ask, "why do we even need two's complement?" Don't worry about that for now. We'll get to it near the end of this post. For now, let's worry about what two's complement lets us do. Two's complement lets us represent negative numbers, zero, and positive numbers within a finite number of bits.
 
-Until I make this widget better, I'll have to briefly explain how to play with it.
+We'll tackle positive numbers and zero first. The way we represent a non-negative number in two's complement is by:
 
-1. At the very bottom of the widget, you're able to control the width of the "integer". In practice, the width will be 16/32/64 bits, but I've reduced the bounds here so that everything fits on the screen.
-2. At the very right of the widget, you'll see a number with up and down chevrons. This allows you to increment and decrement the _decimal_ number being represented.
-3. As you change the decimal number, you'll see the numbers on the left change. The top row is the Two's Complement representation. The bottom row of numbers is what each bit mathematically represents in decimal. If you sum all of those numbers (which will be in red when non-zero), you'll arrive at the number between the up and down chevrons.
+1. Keeping the left-most bit 0
+2. Interpreting the rest of the bits as a binary number
+3. Using the number from step 2 as our final number
 
-Go ahead and play with it!
+You can see it (and play with it!) here:
 
-<h3>Two's Complement Visualizer</h3>
+<TwosComplement
+    minimumWidth={3}
+    initialWidth={4}
+    maximumWidth={5}
+    initialDecimalValue={1}
+    decimalRangePolicy={'non-negative'}
+/>
 
-<Center>
-    <TwosComplementLabelled />
-</Center>
+But how do we represent negative numbers? We can do it by:
+
+1. Keeping the left-most bit 1, and interpeting that bit as the negative of itself. If that bit would mean 8 in a regular binary number, we say that it is -8.
+2. Interpreting the rest of the bits as a binary number
+3. Adding those two parts together to get our final number
+
+Critically, the only difference arises from the left-most bit being 0 or 1. Play with it here:
+
+<TwosComplement
+    minimumWidth={3}
+    initialWidth={4}
+    maximumWidth={5}
+    initialDecimalValue={-8}
+    decimalRangePolicy={'negative'}
+/>
+
+You might have noticed that the previous widgets were non-negative numbers only, or negative numbers only. The widget below is free of these restrictions so that you can have as much fun as you can. Try to answer the following questions; for each of them, take note of what the binary bits look like: are they all the same, or is one bit 1 and the others are 0? Answering these will give you the _real_ intuition for two's complement.
+
+-   What bit configurations lead to a decimal value of: -1, 0, 1?
+-   What's the largest positive integer you can make? Express that in terms of the number of bits (i.e. width).
+-   What's the smallest negative integer you can make? Again, express it as a function of width.
+
+<TwosComplement
+    minimumWidth={2}
+    initialWidth={4}
+    maximumWidth={6}
+    initialDecimalValue={1}
+    decimalRangePolicy={'all'}
+/>
+
+The answers to the questions are below:
+
+<details>
+    <summary>Answers</summary>
+
+1. -1 is formed with bits that are all 1. 0 is formed with all-zero bits. One is formed when the right-most bit is 1.
+2. The largest positive integer is 2 raised to the width-1 power, plus one.
+3. The smallest negative integer is the negative of 2 raised to the width-1 power.
+
+</details>
+
+<h3>Converting from Decimal to Two's Complement</h3>
+
+-   Convert the |decimal| into binary, using just 31 bits (keep the MSB held at 0)
+-   If the decimal is negative, invert the bits from above and add 1
+-   That's so weird! Why does it work? See Appendix A.
+
+<h3>Some Observations About Wrapping</h3>
+
+-   What if you add 1 to smallest possible value?
+-   What if you add 1 to the largest possible value?
+
+<h3>The Numerical Limits of Data Types</h3>
+
+-   Wrapping happens because there are limits to how big a number can get with finite bits
+-   What the limits of various data types and how can we find them?
+
+<h3>Alternative Ways to Represent Numbers</h3>
+
+-   One's complement
+-   Sign magnitude
+
+<h3>Reinterpreting Representations</h3>
+
+-   Wait a minute... what if we just thought of a Two's complement number as a One's complement number?
+-   What if we thought of an int as a char?
+-   What if we thought of a signed int as an unsigned int?
+
+<h3>What's next?</h3>
+
+-   Floating point numbers!
+
+<h3>Appendix A: Why does the given negation formulation work?</h3>
+
+-   Here, I'll show a tiny proof for why ~b + 1 works.
 
 <Spacer size={96} />

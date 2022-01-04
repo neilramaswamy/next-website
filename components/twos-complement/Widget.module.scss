@@ -1,0 +1,77 @@
+.container {
+    display: grid;
+    column-gap: 16px;
+
+    background-color: var(--c-green);
+    // Give a bit more padding on the bottom to account for the absolutely positioned down chevron
+    // animating down on hover
+    padding: 16px 16px 24px 16px;
+    border-radius: 16px;
+}
+
+.digitContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.totalContainer {
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.widthContainer {
+    display: flex;
+    align-items: center;
+    // Put it a the start so that it doesn't wiggle around as the digits are added and the width of
+    // this container changes
+    justify-content: flex-start;
+}
+
+@mixin hoverOffset($xOffset, $yOffset) {
+    transform: translate(#{$xOffset}, #{$yOffset});
+}
+
+.chevronContainer {
+    display: flex;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+
+    &.chevronUp,
+    &.chevronDown {
+        position: absolute;
+        // 12px is half the width of the chevron
+        left: calc(50% - 12px);
+    }
+
+    &.chevronUp {
+        top: -16px;
+    }
+
+    &.chevronDown {
+        bottom: -16px;
+    }
+
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    &:hover:not(.disabled) {
+        &.chevronLeft {
+            @include hoverOffset(-4px, 0);
+        }
+
+        &.chevronRight {
+            @include hoverOffset(4px, 0);
+        }
+
+        &.chevronUp {
+            @include hoverOffset(0, -4px);
+        }
+
+        &.chevronDown {
+            @include hoverOffset(0, 4px);
+        }
+    }
+}
