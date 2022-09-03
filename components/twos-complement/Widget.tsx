@@ -2,6 +2,9 @@ import React from 'react'
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'react-feather'
 import cc from 'util/cc'
 import styles from './Widget.module.scss'
+import Accolade from './accolade.svg'
+
+console.log(Accolade)
 
 const repeat = (str: string, times: number, withReverseCount?: boolean): string => {
     let ret = ''
@@ -26,10 +29,10 @@ const getContainerGridAreaString = (
 
     // prettier-ignore
     let areaString = `
-        ".       bitCount bitCount ${repeat('bitCount', restBits)     }  .  .     "
-        "binText binMSB   .        ${repeat('binRest', restBits, true)}  .  .     "
-        ".       .        .        ${repeat('.', restBits)            }  .  .     "
-        "decText decMSB   plus     ${repeat('decRest', restBits, true)}  eq decNum"
+        ".       bitCount     bitCount ${repeat('bitCount', restBits)     }  .  .     "
+        "binText binMSB       .        ${repeat('binRest', restBits, true)}  .  .     "
+        ".       accoladeMSB  .        ${repeat('accoladeRest', restBits) }  .  .     "
+        "decText decMSB       plus     ${repeat('decRest', restBits)}        eq decNum"
     `
 
     let columnString = `
@@ -148,14 +151,15 @@ export const Widget = (props: Props): JSX.Element => {
                 {decMSB}
             </span>
             <span style={{ gridArea: 'plus' }}>+</span>
-            {decRest.map((bit, i) => (
+            <span style={{ gridArea: 'accoladeRest' }}></span>
+            {/* {decRest.map((bit, i) => (
                 <span
                     className={styles.digitContainer}
                     style={{ gridArea: `decRest-${decRest.length - 1 - i}` }}
                 >
                     {bit}
                 </span>
-            ))}
+            ))} */}
 
             <span style={{ gridArea: 'eq' }}> = </span>
             <div className={styles.totalContainer} style={{ gridArea: 'decNum' }}>
