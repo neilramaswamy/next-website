@@ -12,10 +12,11 @@ export enum OperationType {
 export interface Operation {
     // The process ID that is executing this operation
     proc: number
+    // A unique, human readable event name for this operation
+    operationId: string
 
     // The type of operation being applied to the given object
-    type: OperationType
-
+    operationType: OperationType
     // The object (denoted as a string) on which the operation is taking place
     obj: string
     // The input value to the operation, which might not exist
@@ -27,6 +28,9 @@ export interface Operation {
     stime: number
     // The ending time of the operation, which might not exist if the operation does not return
     etime: number | null
+    // Not a field as defined in the paper, but it represents the linearization point, if there is
+    // one. This value must be greater than or equal to stime, and less than etime.
+    ltime?: number
 }
 
 // While an OperationHistory is defined to be a Set<Operation> in the paper, it's better for us to
@@ -39,7 +43,7 @@ export type OperationHistory = Operation[][]
 
 // Defined at the end of §2.2: a serialization represents the order in which an execution process
 // may observe writes from the system.
-export type Serialization = Operation[]
+export type Serialization = Operation[][]
 
 // This is never explicitly defined in the paper, but it should be clear that linearizable, causal,
 // sequentially consistent, etc. are all consistency predicates.

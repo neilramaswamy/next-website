@@ -43,72 +43,62 @@ export const generateSessionProjection = (
     proc: number
 ): Operation[] => {
     let operations: Operation[] = []
-    for (let i = 0; i < line.length; i++) {
-        if (line[i] === '-') {
-            continue
-        }
 
-        const opIndex = i + 1
-        const arrowStartIndex = i + 2
-        const arrowEndIndex = i + 3
-        const valueStartIndex = i + 4
+    const regex = /\[([A-Z]):([a-z])(<-|->)(\d)\]/g
+    const matches = line.matchAll(regex)
 
-        let operation = null
-        let stime = null
-        let etime = null
-        let ival = null
-        let oval = null
+    for (const match of matches) {
+        const operationId = match[1]
+        const obj = match[2]
+        const arrow = match[3]
+        const value = parseInt(match[4], 10)
 
-        // There should be at least
-        if (line[i] === '[') {
-            const endingBracketIndex = line.indexOf(']', opIndex)
-            if (endingBracketIndex < 0) {
-                throw new Error(
-                    `Could not find matching '|' for starting pipe at index ${i} for line: ${line}`
-                )
-            }
+        assert(
+            match.index !== undefined,
+            `Match index was undefined for ${match}`
+        )
 
-            // Validate the operation
-            const obj = line[i + 1]
+        const operationType =
+            arrow === '->' ? OperationType.Read : OperationType.Write
+        const ival = operationType === OperationType.Write ? value : null
+        const oval = operationType === OperationType.Read ? value : null
 
-            // Validate the arrow
-            const arrow = line.substring(arrowStartIndex, arrowEndIndex + 1)
-            if (arrow === '<-') {
-                operation = OperationType.Write
-            } else if (arrow === '->') {
-                operation = OperationType.Read
-            } else {
-                throw new Error(`Expected "<-" after operation r, got ${arrow}`)
-            }
+        const stime = match.index || 0
+        // Subtract one since the end time is inclusive
+        const etime = stime + match[0].length - 1
 
-            // Parse out the value
-            const valueStr = line.substring(valueStartIndex, endingBracketIndex)
-            const value = parseInt(valueStr, 10)
-            assert(!isNaN(value), `Couldn't parse value ${value} into a number`)
+        operations.push({
+            proc,
+            operationId,
 
-            // Assemble all the values we need for the operation object
-            stime = i
-            etime = endingBracketIndex
-            ival = operation === OperationType.Read ? null : value
-            oval = operation === OperationType.Read ? value : null
+            operationType,
+            obj,
+            ival,
+            oval,
 
-            operations.push({
-                proc,
-                type: operation,
-
-                obj,
-                ival,
-                oval,
-
-                stime,
-                etime,
-            })
-
-            i = endingBracketIndex + 1
-        }
+            stime,
+            etime,
+        })
     }
 
     return operations
+}
+
+/**
+ * Generates an array of Operations using a history and a list of processId names separated by
+ * space.
+ */
+export const generateSerialization = (
+    history: OperationHistory,
+    serialization: string
+): Operation[] => {
+    const map: { [key: string]: Operation } = {}
+    history
+        .flatMap((_) => _)
+        .forEach((value) => (map[value.operationId] = value))
+
+    const operationIds = serialization.split(' ')
+    return operationIds.map((operationId) => map[operationId])
 }
 
 /*
