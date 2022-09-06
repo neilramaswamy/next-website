@@ -70,13 +70,11 @@ export const PRAM = (h: OperationHistory, s: Serialization): boolean => {
  *
  * Guarantee of ordering: total ordering. Not necessarily recent.
  */
-export const isSequentiallyConsistent = (
+export const SequentiallyConsistent = (
     h: OperationHistory,
     s: Serialization
 ): boolean => {
-    if (!PRAM(h, s) || !SingleOrder) return false
-
-    return false
+    return SingleOrder(h, s) && PRAM(h, s) && RVal(h, s)
 }
 
 /**
@@ -143,7 +141,7 @@ export const RVal = (_: OperationHistory, s: Serialization): boolean => {
  * Internally, this function checks that the order of operation IDs for all processes equal
  * the first processes' order of operation IDs.
  */
-export const SingleOrder = (h: History, s: Serialization): boolean => {
+export const SingleOrder = (h: OperationHistory, s: Serialization): boolean => {
     if (s.length === 0) {
         return true
     }

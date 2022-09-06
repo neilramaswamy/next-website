@@ -1,5 +1,11 @@
 import { describe, expect, test, beforeEach } from '@jest/globals'
-import { PRAM, RVal } from './predicates'
+import {
+    isSequentiallyConsistent,
+    PRAM,
+    RVal,
+    SequentiallyConsistent,
+    SingleOrder,
+} from './predicates'
 import {
     generateOperationHistoryFromString,
     generateSerialization,
@@ -107,5 +113,51 @@ describe('RVal consistency', () => {
         const serialization = generateSerialization(history, 'A B C D')
 
         expect(RVal(history, [serialization])).toBe(false)
+    })
+})
+
+describe('sequential consistency', () => {
+    // single order, pram, and rval
+
+    const historyString = `
+    ---[A:x<-1]-----[C:x<-3]-------[E:x<-5]----------------[G:x<-7]
+    -------------[B:x<-2]-------[D:x<-4]------[F:x<-6]---[H:x<-8]--
+    `
+    const history = generateOperationHistoryFromString(historyString)
+
+    test('sequentially inconsistent because not single order', () => {
+        // PRAM and RVAL. There's no RVAL to check!
+        const S_P0 = generateSerialization(history, 'A C E G B D F H')
+        const S_P1 = generateSerialization(history, 'B D F H A C E G')
+
+        expect(SingleOrder(history, [S_P0, S_P1])).toBe(false)
+        expect(PRAM(history, [S_P0, S_P1])).toBe(true)
+        expect(RVal(history, [S_P0, S_P1])).toBe(true)
+
+        expect(SequentiallyConsistent(history, [S_P0, S_P1])).toBe(false)
+    })
+
+    test('sequentially inconsistent because not pram', () => {
+        // Single order
+        const S_P0 = generateSerialization(history, 'A E C G B D F H')
+        const S_P1 = generateSerialization(history, 'A E C G B D F H')
+
+        expect(SingleOrder(history, [S_P0, S_P1])).toBe(true)
+        expect(PRAM(history, [S_P0, S_P1])).toBe(false)
+        expect(RVal(history, [S_P0, S_P1])).toBe(true)
+
+        expect(SequentiallyConsistent(history, [S_P0, S_P1])).toBe(false)
+    })
+
+    test('sequentially inconsistent because not rval', () => {
+        // TODO(neil): How come the paper never includes reads in the serialization?
+    })
+
+    test('multiple different sequentially consistent serializations are accepted for the same history', () => {
+        const S_P0 = generateSerialization(history, 'A B C E D G F H')
+        const S_P1 = generateSerialization(history, 'A C E G B D F H')
+
+        expect(SequentiallyConsistent(history, [S_P0, S_P0])).toBe(true)
+        expect(SequentiallyConsistent(history, [S_P1, S_P1])).toBe(true)
     })
 })
