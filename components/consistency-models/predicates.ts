@@ -29,8 +29,13 @@
  * visible at some point between its invocation and its return.
  */
 
-import { assert } from 'util/assert'
-import { Operation, OperationHistory, Serialization } from './types'
+// import { assert } from 'util/assert'
+import {
+    Operation,
+    OperationHistory,
+    OperationType,
+    Serialization,
+} from './types'
 
 /**
  * Determines whether each processes' serialization orders writes belonging to the same process
@@ -38,7 +43,7 @@ import { Operation, OperationHistory, Serialization } from './types'
  *
  * Guarantee of ordering: a process' writes are applied in the same order globally.
  */
-export const isPRAM = (h: OperationHistory, s: Serialization): boolean => {
+export const PRAM = (h: OperationHistory, s: Serialization): boolean => {
     for (let i = 0; i < s.length; i++) {
         // The correct serialization is that from the *history*
         const correctSerialization = processOperationsToString(h[i])
@@ -69,7 +74,9 @@ export const isSequentiallyConsistent = (
     h: OperationHistory,
     s: Serialization
 ): boolean => {
-    return true
+    if (!PRAM(h, s) || !SingleOrder) return false
+
+    return false
 }
 
 /**
@@ -103,8 +110,31 @@ export const RealTime = (h: History, arb: Operation[]): boolean => {
  * RVal is defined, for read/write storage, to be the value written by the last write according
  * to the arbitration order.
  */
-export const RVal = (arb: Operation[]): boolean => {
-    return true
+export const RVal = (_: OperationHistory, s: Serialization): boolean => {
+    const rvalMap: { [key: string]: number } = {}
+
+    const processIsRVal = (ops: Operation[]): boolean => {
+        return ops.every((op) => {
+            if (op.operationType === OperationType.Write && op.ival !== null) {
+                rvalMap[op.obj] = op.ival
+                return true
+            }
+
+            if (op.operationType === OperationType.Read && op.oval !== null) {
+                if (!rvalMap[op.obj]) {
+                    throw new Error(
+                        `Cannot read an object ${op.obj} that was never written`
+                    )
+                }
+
+                return op.oval === rvalMap[op.obj]
+            }
+
+            throw new Error(`Unsupported operation type: ${op.operationType}`)
+        })
+    }
+
+    return s.every(processIsRVal)
 }
 
 /**

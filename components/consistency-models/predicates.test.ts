@@ -1,20 +1,10 @@
 import { describe, expect, test, beforeEach } from '@jest/globals'
-import { isPRAM } from './predicates'
+import { PRAM, RVal } from './predicates'
 import {
     generateOperationHistoryFromString,
     generateSerialization,
 } from './test-utils'
 import { OperationHistory, OperationType, Serialization } from './types'
-
-const foo = `
-|w<-3|---------|r<-3|---------
--------|w<-10|----------------
-`
-
-const bar = `
-|x<-3|---------|x->10|--------
--------|w<-10|----------------
-`
 
 describe('read-after-write consistency', () => {
     test('consistent reads are consistent for a single process', () => {
@@ -65,25 +55,57 @@ describe('PRAM consistency', () => {
         const S_P0 = generateSerialization(history, 'A B C E D G F H')
         const S_P1 = generateSerialization(history, 'A C E G B D F H')
 
-        expect(isPRAM(history, [S_P0, S_P1])).toBe(true)
+        expect(PRAM(history, [S_P0, S_P1])).toBe(true)
     })
 
     test('PRAM consistent serialization that is sequentially consistent', () => {
         const S_P0 = generateSerialization(history, 'A B C E D G F H')
 
-        expect(isPRAM(history, [S_P0, S_P0])).toBe(true)
+        expect(PRAM(history, [S_P0, S_P0])).toBe(true)
     })
 
     test('PRAM consistent serialization that is linearizable', () => {
         const S_P0 = generateSerialization(history, 'A C B D E F H G')
 
-        expect(isPRAM(history, [S_P0, S_P0])).toBe(true)
+        expect(PRAM(history, [S_P0, S_P0])).toBe(true)
     })
 
     test('PRAM inconsistent serialization due to out-of-order writes on one process', () => {
         // Switch A and C
         const S_P0 = generateSerialization(history, 'C A E G B D F H')
 
-        expect(isPRAM(history, [S_P0, S_P0])).toBe(false)
+        expect(PRAM(history, [S_P0, S_P0])).toBe(false)
+    })
+})
+
+describe('RVal consistency', () => {
+    test('single process consistency', () => {
+        const historyString = `
+        -----[A:x<-3]---[B:x->3]---[C:x<-4]---[D:x->4]
+        `
+        const history = generateOperationHistoryFromString(historyString)
+        const serialization = generateSerialization(history, 'A B C D')
+
+        expect(RVal(history, [serialization])).toBe(true)
+    })
+
+    test('single process inconsistency because of an old value', () => {
+        const historyString = `
+        -----[A:x<-3]---[B:x->3]---[C:x<-4]---[D:x->3]
+        `
+        const history = generateOperationHistoryFromString(historyString)
+        const serialization = generateSerialization(history, 'A B C D')
+
+        expect(RVal(history, [serialization])).toBe(false)
+    })
+
+    test('RVal inconsistency because of a never-written-before value', () => {
+        const historyString = `
+        -----[A:x<-3]---[B:x->4]---[C:x<-4]---[D:x->5]
+        `
+        const history = generateOperationHistoryFromString(historyString)
+        const serialization = generateSerialization(history, 'A B C D')
+
+        expect(RVal(history, [serialization])).toBe(false)
     })
 })

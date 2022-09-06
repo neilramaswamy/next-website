@@ -1,5 +1,10 @@
 import { assert } from 'console'
-import { Operation, OperationHistory, OperationType } from './types'
+import {
+    Operation,
+    OperationHistory,
+    OperationType,
+    Serialization,
+} from './types'
 
 /**
  * Takes a string-based representation of an operation history and returns an OperationHistory that
@@ -100,7 +105,6 @@ export const generateSerialization = (
     const operationIds = serialization.split(' ')
     return operationIds.map((operationId) => map[operationId])
 }
-
 /*
 const foo = `
 |x<-3|---------|x->3|---------
