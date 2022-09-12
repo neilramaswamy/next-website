@@ -26,11 +26,11 @@ export interface Operation {
 
     // The starting time of the operation
     stime: number
-    // The ending time of the operation, which might not exist if the operation does not return
-    etime: number | null
+    // The ending time of the operation
+    etime: number
     // Not a field as defined in the paper, but it represents the linearization point, if there is
     // one. This value must be greater than or equal to stime, and less than etime.
-    ltime?: number
+    ltime: number | undefined
 }
 
 // While an OperationHistory is defined to be a Set<Operation> in the paper, it's better for us to

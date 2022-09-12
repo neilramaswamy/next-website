@@ -82,25 +82,36 @@ export const SequentiallyConsistent = (
  *
  * Sequentially consistent, with the real-time guarantee.
  */
-export const isLinearizable = (
+export const Linearizable = (
     h: OperationHistory,
     s: Serialization
 ): boolean => {
-    return true
+    return SequentiallyConsistent(h, s) && RealTime(h, s)
 }
 
 /**
  * RealTime dictates that if a returns before b, then a must come before b in the arbitration
- * order.
- *
- * Internally, this function works by constructing the arb (a total order) from the given
- * serialization, as well as the returns-before relation from the history. Then, it checks that
- * every element in the returns-before relation is present in arb.
+ * order. For now, this just checks that there is a linearization point.
  *
  * NOTE: we could construct a serialization from the given history h, if it has linearization
  * points set.
  */
-export const RealTime = (h: History, arb: Operation[]): boolean => {
+export const RealTime = (h: OperationHistory, s: Serialization): boolean => {
+    // TODO(neil): Make this more rigorous!
+    for (let i = 0; i < s.length; i++) {
+        const serialization = s[i]
+
+        serialization.forEach((op) => {
+            if (op.ltime === undefined) {
+                return false
+            }
+
+            if (op.ltime < op.stime && op.ltime > op.etime) {
+                return false
+            }
+        })
+    }
+
     return true
 }
 

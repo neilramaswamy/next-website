@@ -1,10 +1,10 @@
 import { describe, expect, test, beforeEach } from '@jest/globals'
 import {
-    isSequentiallyConsistent,
     PRAM,
     RVal,
     SequentiallyConsistent,
     SingleOrder,
+    Linearizable,
 } from './predicates'
 import {
     generateOperationHistoryFromString,
@@ -151,6 +151,19 @@ describe('sequential consistency', () => {
 
     test('sequentially inconsistent because not rval', () => {
         // TODO(neil): How come the paper never includes reads in the serialization?
+        // PRAM and single order
+        const historyWithReadsString = `
+        ---[A:x<-1]-----[C:x<-1]-------[E:x->3]---------[G:x<-5]-------
+        -------------[B:x<-2]-------[D:x<-3]------[F:x<-4]---[H:x->8]--
+        `
+        const historyWithReads = generateOperationHistoryFromString(
+            historyWithReadsString
+        )
+        const S_P0 = generateSerialization(historyWithReads, 'A C B D E F G H')
+
+        expect(SequentiallyConsistent(historyWithReads, [S_P0, S_P0])).toBe(
+            false
+        )
     })
 
     test('multiple different sequentially consistent serializations are accepted for the same history', () => {
